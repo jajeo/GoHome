@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>06C3B59C-3E6B-4E12-8FE1-446E010C0AA4</string>
+	<key>IDESourceControlProjectName</key>
+	<string>project</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>78B74BA53D6728BF5CF72B2A87A652A3D3729853</key>
+		<string>ssh://45.62.115.21:29123/iOStudy.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>iOS/GoHome/GoHome.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>78B74BA53D6728BF5CF72B2A87A652A3D3729853</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://45.62.115.21:29123/iOStudy.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>78B74BA53D6728BF5CF72B2A87A652A3D3729853</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>78B74BA53D6728BF5CF72B2A87A652A3D3729853</string>
+			<key>IDESourceControlWCCName</key>
+			<string>iOStudy</string>
+		</dict>
+	</array>
+</dict>
+</plist>
