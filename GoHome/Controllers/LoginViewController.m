@@ -127,10 +127,11 @@
             [self performSegueWithIdentifier:@"OrderViewController" sender:self];
         } else {
             [self _notifyUserWithTitle:@"效验密码发生错误" withSubTitle:code.data.otherMsg duration:0.5 type:TSMessageNotificationTypeError];
-            
+            [self refreshVerifyCode:nil];
             self.view.userInteractionEnabled = YES;
         }
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
+        [self refreshVerifyCode:nil];
         [self _notifyUserWithTitle:@"效验密码发生错误" withSubTitle:error.localizedDescription duration:1 type:TSMessageNotificationTypeError];
         
         self.view.userInteractionEnabled = YES;
@@ -158,6 +159,13 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)_clearBtnSelectStatus{
+    for (UIButton *btn in _verifyCodeImgView.subviews) {
+        btn.selected = NO;
+    }
+}
+
+
 
 #pragma mark - getters  &  setters
 
@@ -180,6 +188,8 @@
 #pragma mark - target Actions
 
 - (IBAction)refreshVerifyCode:(id)sender{
+    [self _clearBtnSelectStatus];
+    
     NSURL *imgUrl = [NSURL URLWithString:VERIFY_CODE_IMG_URL];
     SDWebImageOptions options = SDWebImageAllowInvalidSSLCertificates|SDWebImageRefreshCached|SDWebImageHandleCookies;
     [_verifyCodeImgView sd_setImageWithURL:imgUrl placeholderImage:nil options:options];
@@ -209,6 +219,7 @@
                                   duration:0.5
                                       type:TSMessageNotificationTypeWarning];
                 
+                [self refreshVerifyCode:nil];
                 self.view.userInteractionEnabled = YES;
                 
             }
@@ -219,6 +230,7 @@
                               withSubTitle:error.localizedDescription
                                   duration:0.5
                                       type:TSMessageNotificationTypeWarning];
+                [self refreshVerifyCode:nil];
                 self.view.userInteractionEnabled = YES;
             }
         }];

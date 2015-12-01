@@ -9,7 +9,7 @@
 #import "RootViewController.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "LoginViewController.h"
-#import "OrderViewController.h"
+#import "BookInfoViewController.h"
 #import "CLDataModels.h"
 #import "TSMessage.h"
 
@@ -68,8 +68,6 @@
 }
 
 - (void)_navOrderViewController{
-//    OrderViewController *orderVc = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"OrderViewController"];
-//    [self.navigationController pushViewController:orderVc animated:YES];
     [self performSegueWithIdentifier:@"OrderViewController" sender:self];
 }
 

@@ -59,6 +59,7 @@
 		CF15736A1C0C06A900CEEE81 /* PVPassVerify.m in Sources */ = {isa = PBXBuildFile; fileRef = CF1573661C0C06A900CEEE81 /* PVPassVerify.m */; };
 		CF15736B1C0C06A900CEEE81 /* PVValidateMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = CF1573681C0C06A900CEEE81 /* PVValidateMessages.m */; };
 		CF15736E1C0C312400CEEE81 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CF15736D1C0C312400CEEE81 /* LoginViewController.m */; };
+		CF31DCEC1C0D911300FEE184 /* CommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CF31DCEB1C0D911300FEE184 /* CommonUtils.m */; };
 		CF6B239E1C0BE5DD006BC586 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6B239D1C0BE5DD006BC586 /* SystemConfiguration.framework */; };
 		CF6B23A01C0BE643006BC586 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF6B239F1C0BE643006BC586 /* MobileCoreServices.framework */; };
 		CF6B23B51C0BE6A1006BC586 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6B23A31C0BE6A1006BC586 /* AFHTTPRequestOperation.m */; };
@@ -70,7 +71,7 @@
 		CF6B23BB1C0BE6A1006BC586 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6B23B01C0BE6A1006BC586 /* AFURLRequestSerialization.m */; };
 		CF6B23BC1C0BE6A1006BC586 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6B23B21C0BE6A1006BC586 /* AFURLResponseSerialization.m */; };
 		CF6B23BD1C0BE6A1006BC586 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CF6B23B41C0BE6A1006BC586 /* AFURLSessionManager.m */; };
-		CFD7B1531C0C3434001C101A /* OrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD7B1521C0C3434001C101A /* OrderViewController.m */; };
+		CFD7B1531C0C3434001C101A /* BookInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD7B1521C0C3434001C101A /* BookInfoViewController.m */; };
 		CFD7B15C1C0C417C001C101A /* CLCheckLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD7B1561C0C417C001C101A /* CLCheckLogin.m */; };
 		CFD7B15D1C0C417C001C101A /* CLData.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD7B1581C0C417C001C101A /* CLData.m */; };
 		CFD7B15E1C0C417C001C101A /* CLValidateMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = CFD7B15B1C0C417C001C101A /* CLValidateMessages.m */; };
@@ -166,6 +167,8 @@
 		CF1573681C0C06A900CEEE81 /* PVValidateMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PVValidateMessages.m; sourceTree = "<group>"; };
 		CF15736C1C0C312400CEEE81 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		CF15736D1C0C312400CEEE81 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		CF31DCEA1C0D911300FEE184 /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
+		CF31DCEB1C0D911300FEE184 /* CommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonUtils.m; sourceTree = "<group>"; };
 		CF6B239D1C0BE5DD006BC586 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		CF6B239F1C0BE643006BC586 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		CF6B23A21C0BE6A1006BC586 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -187,8 +190,8 @@
 		CF6B23B21C0BE6A1006BC586 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		CF6B23B31C0BE6A1006BC586 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		CF6B23B41C0BE6A1006BC586 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
-		CFD7B1511C0C3434001C101A /* OrderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderViewController.h; sourceTree = "<group>"; };
-		CFD7B1521C0C3434001C101A /* OrderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderViewController.m; sourceTree = "<group>"; };
+		CFD7B1511C0C3434001C101A /* BookInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookInfoViewController.h; sourceTree = "<group>"; };
+		CFD7B1521C0C3434001C101A /* BookInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookInfoViewController.m; sourceTree = "<group>"; };
 		CFD7B1551C0C417C001C101A /* CLCheckLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLCheckLogin.h; sourceTree = "<group>"; };
 		CFD7B1561C0C417C001C101A /* CLCheckLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLCheckLogin.m; sourceTree = "<group>"; };
 		CFD7B1571C0C417C001C101A /* CLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLData.h; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 		CF073E741C083C6900624F2C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				CF31DCEA1C0D911300FEE184 /* CommonUtils.h */,
+				CF31DCEB1C0D911300FEE184 /* CommonUtils.m */,
 				CF073E751C083C6900624F2C /* StringUtil.h */,
 				CF073E761C083C6900624F2C /* StringUtil.m */,
 			);
@@ -380,8 +385,8 @@
 				CF1573541C0BF6DF00CEEE81 /* RootViewController.m */,
 				CF15736C1C0C312400CEEE81 /* LoginViewController.h */,
 				CF15736D1C0C312400CEEE81 /* LoginViewController.m */,
-				CFD7B1511C0C3434001C101A /* OrderViewController.h */,
-				CFD7B1521C0C3434001C101A /* OrderViewController.m */,
+				CFD7B1511C0C3434001C101A /* BookInfoViewController.h */,
+				CFD7B1521C0C3434001C101A /* BookInfoViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -593,7 +598,7 @@
 				CF1573451C0BF4A000CEEE81 /* HexColors.m in Sources */,
 				CF1573491C0BF6AC00CEEE81 /* AppDelegate.m in Sources */,
 				CF073E701C08312300624F2C /* UIImageView+HighlightedWebCache.m in Sources */,
-				CFD7B1531C0C3434001C101A /* OrderViewController.m in Sources */,
+				CFD7B1531C0C3434001C101A /* BookInfoViewController.m in Sources */,
 				CF15734F1C0BF6BA00CEEE81 /* main.m in Sources */,
 				CF073E641C08312300624F2C /* NSData+ImageContentType.m in Sources */,
 				CF073E6A1C08312300624F2C /* SDWebImageManager.m in Sources */,
@@ -617,6 +622,7 @@
 				CF15735E1C0BF98A00CEEE81 /* VCData.m in Sources */,
 				CF15735F1C0BF98A00CEEE81 /* VCValidateMessages.m in Sources */,
 				CF15736A1C0C06A900CEEE81 /* PVPassVerify.m in Sources */,
+				CF31DCEC1C0D911300FEE184 /* CommonUtils.m in Sources */,
 				CF073E6C1C08312300624F2C /* UIButton+WebCache.m in Sources */,
 				CF6B23B61C0BE6A1006BC586 /* AFHTTPRequestOperationManager.m in Sources */,
 				CFD7B15C1C0C417C001C101A /* CLCheckLogin.m in Sources */,
