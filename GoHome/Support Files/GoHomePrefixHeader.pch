@@ -25,6 +25,13 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Security/Security.h>
 
+
+/**
+ *  超时时间
+ */
+
+#define  REQUEST_TIMEOUT_SEC    30
+
 /**
  *  检查用户是否登录  URI
  */

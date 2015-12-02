@@ -7,13 +7,11 @@
 //
 
 #import "LoginViewController.h"
-#import "UIImageView+WebCache.h"
-#import "AFHTTPRequestOperationManager.h"
-#import "TSMessage.h"
-#import "StringUtil.h"
 #import "VCDataModels.h"
 #import "PVDataModels.h"
 #import "CommonUtils.h"
+#import "NetUtils.h"
+#import "UIViewController+Notify.h"
 
 @interface LoginViewController ()<UIGestureRecognizerDelegate>{
     __weak IBOutlet UIImageView     *_verifyCodeImgView;
@@ -25,8 +23,6 @@
     NSMutableArray                  *_verifyCodeArr;
     NSString                        *_codeStr;
 }
-
-@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
 
 - (IBAction)doLogin:(id)sender;
 - (void)tapImageAction:(UIButton*)btn;
@@ -53,13 +49,11 @@
 #pragma mark  - private method
 
 - (void)_requestInitPages{
-    [self.manager GET:USER_LOGIN_URL parameters:nil success:^(AFHTTPRequestOperation *operation, id retObj) {
+    [ [NetUtils sharedInstance].manager GET:USER_LOGIN_URL parameters:nil success:^(AFHTTPRequestOperation *operation, id retObj) {
         [self refreshVerifyCode:nil];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (error) {
-            [TSMessage showNotificationWithTitle:@"请求登录页发生错误"
-                                        subtitle:error.localizedDescription
-                                            type:TSMessageNotificationTypeError];
+            [self notifyUserWithTitle:@"请求登录页发生错误" withSubTitle:error.localizedDescription duration:1 type:TSMessageNotificationTypeError];
         }
     }];
     
@@ -91,14 +85,13 @@
     _usernameStr = _unameTF.text;
     _passwordStr = _passwordTF.text;
     
-    if ([StringUtil stringIsEmptyOrIsNull:_usernameStr]) {
+    if (!_usernameStr || _usernameStr.length == 0) {
         return NO;
     }
     
-    if ([StringUtil stringIsEmptyOrIsNull:_passwordStr]) {
+    if (!_passwordStr || _passwordStr.length == 0) {
         return NO;
     }
-    
     
     return YES;
 }
@@ -117,46 +110,63 @@
 
 - (void)_verifyPassword{
     NSDictionary *params = @{@"loginUserDTO.user_name":_usernameStr,@"userDTO.password":_passwordStr,@"randCode":_codeStr};
-    [self.manager POST:VERIFY_PASS_URI parameters:params success:^(AFHTTPRequestOperation *operation, id ret) {
+    [[NetUtils sharedInstance].manager POST:VERIFY_PASS_URI parameters:params success:^(AFHTTPRequestOperation *operation, id ret) {
         NSDictionary *retDic = [NSJSONSerialization JSONObjectWithData:ret options:0 error:nil];
         PVPassVerify *code = [[PVPassVerify alloc] initWithDictionary:retDic];
         if ([code.data.loginCheck isEqualToString:@"Y"]) {
-            [self _notifyUserWithTitle:@"登录成功" withSubTitle:@"进入订票" duration:1 type:TSMessageNotificationTypeSuccess];
+            [self notifyUserWithTitle:@"登录成功" withSubTitle:@"进入订票" duration:1 type:TSMessageNotificationTypeSuccess];
             self.view.userInteractionEnabled = YES;
             [self _saveUserCookie];
             [self performSegueWithIdentifier:@"OrderViewController" sender:self];
         } else {
-            [self _notifyUserWithTitle:@"效验密码发生错误" withSubTitle:code.data.otherMsg duration:0.5 type:TSMessageNotificationTypeError];
+            [self notifyUserWithTitle:@"效验密码发生错误" withSubTitle:code.data.otherMsg duration:0.5 type:TSMessageNotificationTypeError];
             [self refreshVerifyCode:nil];
             self.view.userInteractionEnabled = YES;
         }
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
         [self refreshVerifyCode:nil];
-        [self _notifyUserWithTitle:@"效验密码发生错误" withSubTitle:error.localizedDescription duration:1 type:TSMessageNotificationTypeError];
+        [self notifyUserWithTitle:@"效验密码发生错误" withSubTitle:error.localizedDescription duration:1 type:TSMessageNotificationTypeError];
         
         self.view.userInteractionEnabled = YES;
     }];
 }
 
-- (void)_notifyUserWithTitle:(NSString*)title  withSubTitle:(NSString*)subTitle duration:(NSTimeInterval)duration type:(TSMessageNotificationType)type{
-    [TSMessage showNotificationInViewController:self.navigationController title:title subtitle:subTitle type:type duration:duration];
-}
-
 - (void)_saveUserCookie{
+    //设置cookie
+    NSMutableArray *cookies = [NSMutableArray array];
     NSMutableDictionary *cookieDic = [NSMutableDictionary dictionary];
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    for (NSHTTPCookie *cookie in [storage cookies]) {
-        
+    [cookies addObjectsFromArray:storage.cookies];
+    for (NSHTTPCookie *cookie in storage.cookies) {
         [cookieDic setObject:cookie.properties forKey:cookie.name];
     }
+    NSDictionary *tempDic = @{@"_jc_save_fromStation":@"深圳,SZQ",
+                              @"_jc_save_showIns":@"true",
+                              @"_jc_save_toStation":@"fI,WHN",
+                              @"_jc_save_wfdc_flag":@"dc",
+                              @"_jc_save_fromDate":@"2015-12-13",
+                              @"_jc_save_toDate":@"2015-12-02"};
+    
+    for (NSString *key in tempDic) {
+        NSString *value = tempDic[key];
+        NSDictionary *properties = @{NSHTTPCookieDomain: @"kyfw.12306.cn",
+                                     NSHTTPCookiePath: @"/",
+                                     NSHTTPCookieName:key ,
+                                     NSHTTPCookieValue:value,
+                                     NSHTTPCookieMaximumAge:@"0"};
+        NSHTTPCookie *cookie = [[NSHTTPCookie alloc] initWithProperties:properties];
+        [cookies addObject:cookie];
+        [cookieDic setObject:properties forKey:key];
+    }
+    NSURL *baseURL = [NSURL URLWithString:BASE_URL];
+    [storage setCookies:cookies forURL:baseURL mainDocumentURL:baseURL];
 #ifdef DEBUG
     NSLog(@"%@", cookieDic);
 #endif
-    
-    [NSUserDefaults standardUserDefaults];
-    
-    [[NSUserDefaults standardUserDefaults] setObject:cookieDic forKey:COOKIE_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[NSUserDefaults standardUserDefaults] setObject:cookieDic forKey:COOKIE_KEY];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
 }
 
 - (void)_clearBtnSelectStatus{
@@ -165,31 +175,16 @@
     }
 }
 
-
-
-#pragma mark - getters  &  setters
-
-- (AFHTTPRequestOperationManager*)manager{
-    if (!_manager) {
-        NSURL *baseURL = [NSURL URLWithString:BASE_URL];
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-        securityPolicy.allowInvalidCertificates = YES;
-        [securityPolicy setValidatesDomainName:NO];
-        _manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseURL];
-        _manager.securityPolicy = securityPolicy;
-        _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-        [_manager.requestSerializer setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:38.0) Gecko/20100101 Firefox/38.0" forHTTPHeaderField:@"User-Agent"];
-        [_manager.requestSerializer setValue:@"keep-alive" forHTTPHeaderField:@"Connection"];
-    }
-    return _manager;
+- (void)_loadFailedRefreshUI{
+    [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求登录验证码图片出错了..." duration:1.0 type:TSMessageNotificationTypeError];
+    [_verifyCodeImgView setImage:[UIImage imageNamed:@"login_loading_failed"]];
+    self.view.userInteractionEnabled = YES;
 }
-
-
 
 #pragma mark - target Actions
 
 - (IBAction)refreshVerifyCode:(id)sender{
+    _verifyCodeImgView.image = [UIImage imageNamed:@"login_loading_image"];
     [self _clearBtnSelectStatus];
     
     NSString *randomStr = [CommonUtils generateRandomWithLength:17
@@ -197,11 +192,20 @@
                                                containUpperChar:NO
                                                containLowerChar:NO
                                              containSepcialChar:NO];
-    NSString *imgUrlStr = [NSString stringWithFormat:@"%@%@%@",BASE_URL, USER_LOGIN_VERIFY_CODE_IMG_URL, randomStr];
-    NSURL *imgUrl = [NSURL URLWithString:imgUrlStr];
-    SDWebImageOptions options = SDWebImageAllowInvalidSSLCertificates|SDWebImageRefreshCached|SDWebImageHandleCookies;
-    [_verifyCodeImgView sd_setImageWithURL:imgUrl placeholderImage:nil options:options];
+    NSString *imgUrlStr = [NSString stringWithFormat:@"%@%@", USER_LOGIN_VERIFY_CODE_IMG_URL, randomStr];
+    [[NetUtils sharedInstance].manager GET:imgUrlStr parameters:nil success:^(AFHTTPRequestOperation *op, NSData *retData) {
+        if (!retData || retData.length == 0) {
+            [self _loadFailedRefreshUI];
+        }
+        UIImage *image = [UIImage imageWithData:retData];
+        [_verifyCodeImgView setImage:image];
+    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
+        [self _loadFailedRefreshUI];
+    }];
 }
+
+
+
 
 - (IBAction)doLogin:(id)sender{
     self.view.userInteractionEnabled = NO;
@@ -211,30 +215,29 @@
         _codeStr = [self _concatVerifyCode];
         NSDictionary *codeParams = @{@"rand":@"sjrand", @"randCode": _codeStr};
         
-        [self.manager POST:VERIFY_CODE_URI parameters:codeParams success:^(AFHTTPRequestOperation *operation, id retObj) {
+        [[NetUtils sharedInstance].manager POST:VERIFY_CODE_URI parameters:codeParams success:^(AFHTTPRequestOperation *operation, id retObj) {
             id retDic = [NSJSONSerialization JSONObjectWithData:retObj options:0 error:nil];
             VCVerifyCode *code = [[VCVerifyCode alloc] initWithDictionary:retDic];
             if ([code.data.result isEqualToString:@"1"]) {
-                [self _notifyUserWithTitle:@"效验验证码成功"
+                [self notifyUserWithTitle:@"效验验证码成功"
                               withSubTitle:@"准备效验密码"
                                   duration:0.5
                                       type:TSMessageNotificationTypeSuccess];
                 [self _verifyPassword];
 
             } else {
-                [self _notifyUserWithTitle:@"效验验证码发生错误"
+                [self notifyUserWithTitle:@"效验验证码发生错误"
                               withSubTitle:code.data.msg
                                   duration:0.5
                                       type:TSMessageNotificationTypeWarning];
                 
                 [self refreshVerifyCode:nil];
                 self.view.userInteractionEnabled = YES;
-                
             }
             
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             if (error) {
-                [self _notifyUserWithTitle:@"效验验证码发生错误"
+                [self notifyUserWithTitle:@"效验验证码发生错误"
                               withSubTitle:error.localizedDescription
                                   duration:0.5
                                       type:TSMessageNotificationTypeWarning];

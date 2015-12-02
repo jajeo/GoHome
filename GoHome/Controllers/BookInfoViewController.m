@@ -8,22 +8,18 @@
 
 #import "BookInfoViewController.h"
 #import "AFHTTPRequestOperationManager.h"
-#import "TSMessage.h"
-#import "UIImageView+WebCache.h"
 #import "CommonUtils.h"
+#import "UIViewController+Notify.h"
+#import "NetUtils.h"
 
 @interface BookInfoViewController (){
-    __weak IBOutlet UITextField     *_dateTF;
-    __weak IBOutlet UITextField     *_fromTF;
-    __weak IBOutlet UITextField     *_toTF;
     __weak IBOutlet UIImageView     *_verifyCodeImgView;
     
     NSString                        *_tokenStr;
     NSMutableArray                  *_verifyCodeArr;
 }
 
-- (IBAction)_beginSelectTrainNo:(id)sender;
-@property (nonatomic, strong) AFHTTPRequestOperationManager *manager;
+- (IBAction)_submitTicketOrder:(id)sender;
 
 @end
 
@@ -54,28 +50,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - getters  &  setters
-
-- (AFHTTPRequestOperationManager*)manager{
-    if (!_manager) {
-        NSURL *baseURL = [NSURL URLWithString:BASE_URL];
-        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
-        securityPolicy.allowInvalidCertificates = YES;
-        [securityPolicy setValidatesDomainName:NO];
-        _manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseURL];
-        _manager.securityPolicy = securityPolicy;
-        _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-        
-//        NSString *cookieStr = [self _constructCookieString];
-//        [_manager.requestSerializer setValue:cookieStr forHTTPHeaderField:@"Cookie"];
-        [_manager.requestSerializer setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:38.0) Gecko/20100101 Firefox/38.0" forHTTPHeaderField:@"User-Agent"];
-        [_manager.requestSerializer setValue:@"keep-alive" forHTTPHeaderField:@"Connection"];
-        [self _setGlobalCookieInfo];
-        
-    }
-    return _manager;
-}
 
 #pragma mark - private method
 
@@ -109,9 +83,6 @@
     return theRequest;
 }
 
-
-//_constructCookieString 和 _setGlobalCookieInfo二选一，由于后面用到SDWebImage这里选择设置全局cookie
-//如果使用_constructCookieString，后面可选择使用AFNetworking请求图片数据
 - (void)_setGlobalCookieInfo{
     //设置cookie
     NSMutableArray *cookies = [NSMutableArray array];
@@ -138,30 +109,13 @@
      NSURL *baseURL = [NSURL URLWithString:BASE_URL];
      [storage setCookies:cookies forURL:baseURL mainDocumentURL:baseURL];
 }
-//
-//- (NSString*)_constructCookieString{
-//    NSMutableString *retStr = [NSMutableString string];
-//    
-//    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-//    for (NSHTTPCookie *cookie in storage.cookies) {
-//        [retStr appendFormat:@"%@=%@;", cookie.name, cookie.value];
-//    }
-//    [retStr appendString:@"_jc_save_fromStation=深圳,SZQ;"];
-//    [retStr appendString:@"_jc_save_showIns=true;"];
-//    [retStr appendString:@"_jc_save_toStation=fI,WHN;"];
-//    [retStr appendString:@"_jc_save_wfdc_flag=dc;"];
-//    [retStr appendString:@"_jc_save_fromDate=2015-12-13;"];
-//    [retStr appendString:@"_jc_save_toDate=2015-12-01"];
-//    
-//    return retStr;
-//}
 
 - (void)_requestSubmitToken{
     NSDictionary *params = @{@"_json_att=":@""};
-    [self.manager POST:INIT_DC_URI parameters:params success:^(AFHTTPRequestOperation *op, id retData) {
+    [[NetUtils sharedInstance].manager POST:INIT_DC_URI parameters:params success:^(AFHTTPRequestOperation *op, id retData) {
         [self _handleRequestTokenData:retData];
     } failure:^(AFHTTPRequestOperation *op, NSError *error) {
-        [TSMessage showNotificationInViewController:self.navigationController title:@"悲鸟个催！" subtitle:@"请求REPEAT_SUBMIT_TOKEN出错啦！" type:TSMessageNotificationTypeError duration:1];
+        [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求REPEAT_SUBMIT_TOKEN出错啦！"  duration:1 type:TSMessageNotificationTypeError];
     }];
 }
 
@@ -183,34 +137,18 @@
         }
     }
     if (!_tokenStr || ([_tokenStr rangeOfString:@"null"].location != NSNotFound)) {
-        [TSMessage showNotificationInViewController:self.navigationController title:@"悲鸟个催！" subtitle:@"请求REPEAT_SUBMIT_TOKEN出错啦！" type:TSMessageNotificationTypeError duration:1];
+        [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求REPEAT_SUBMIT_TOKEN出错啦！"  duration:1.0 type:TSMessageNotificationTypeError];
     } else {
-//        [self _requestRandomVerifyCode];
-//        [self _requestPassengerInfo];
         [self refreshVerifyCode:nil];
     }
 }
 
-//- (void)_requestPassengerInfo{
-//    NSDictionary *params = @{@"REPEAT_SUBMIT_TOKEN":_tokenStr,@"_json_att":@""};
-//    [self.manager POST:@"https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs" parameters:params success:^(AFHTTPRequestOperation *op, id retData) {
-////        NSString *str = [[NSString alloc] initWithData:retData encoding:NSUTF8StringEncoding];
-////        NSLog(@"%@", str);
-//        [self _requestRandomVerifyCode];
-//    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
-//        
-//    }];
-//}
-//
-//- (void)_requestRandomVerifyCode{
-//    NSDictionary *params = nil;
-//    [self.manager GET:@"https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp&0.20263652402247678" parameters:params success:^(AFHTTPRequestOperation *op, id retData) {
-//        UIImage *image = [UIImage imageWithData:retData];
-//        _verifyCodeImgView.image = image;
-//    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
-//        
-//    }];
-//}
+- (void)_loadFailedRefreshUI{
+    [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求登录验证码图片出错了..." duration:1.0 type:TSMessageNotificationTypeError];
+    [_verifyCodeImgView setImage:[UIImage imageNamed:@"login_loading_failed"]];
+    self.view.userInteractionEnabled = YES;
+}
+
 
 - (void)_clearBtnSelectStatus{
     for (UIButton *btn in _verifyCodeImgView.subviews) {
@@ -223,20 +161,28 @@
 
 - (IBAction)refreshVerifyCode:(id)sender{
     [self _clearBtnSelectStatus];
+    _verifyCodeImgView.image = [UIImage imageNamed:@"login_loading_image"];
     
     NSString *randomStr = [CommonUtils generateRandomWithLength:17
                                                   containNumber:YES
                                                containUpperChar:NO
                                                containLowerChar:NO
                                              containSepcialChar:NO];
-    NSString *imgUrlStr = [NSString stringWithFormat:@"%@%@%@",BASE_URL, CONFIRM_ORDER_VERIFY_CODE_URI, randomStr];
-    NSURL *imgUrl = [NSURL URLWithString:imgUrlStr];
-    SDWebImageOptions options = SDWebImageAllowInvalidSSLCertificates|SDWebImageRefreshCached|SDWebImageHandleCookies;
-    [_verifyCodeImgView sd_setImageWithURL:imgUrl placeholderImage:nil options:options];
+    NSString *imgUrlStr = [NSString stringWithFormat:@"%@%@", CONFIRM_ORDER_VERIFY_CODE_URI, randomStr];
+    [[NetUtils sharedInstance].manager GET:imgUrlStr parameters:nil success:^(AFHTTPRequestOperation *op, NSData *retData) {
+        if (!retData || retData.length == 0) {
+            [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求登录验证码图片出错了..." duration:1.0 type:TSMessageNotificationTypeError];
+        }
+        UIImage *image = [UIImage imageWithData:retData];
+        [_verifyCodeImgView setImage:image];
+    } failure:^(AFHTTPRequestOperation *op, NSError *error) {
+        [self notifyUserWithTitle:@"悲鸟个催！" withSubTitle:@"请求登录验证码图片出错了..." duration:1.0 type:TSMessageNotificationTypeError];
+    }];
+    
 }
 
 
-- (IBAction)_beginSelectTrainNo:(id)sender{
+- (IBAction)_submitTicketOrder:(id)sender{
     
 }
 
