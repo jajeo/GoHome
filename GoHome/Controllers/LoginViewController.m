@@ -13,6 +13,7 @@
 #import "StringUtil.h"
 #import "VCDataModels.h"
 #import "PVDataModels.h"
+#import "CommonUtils.h"
 
 @interface LoginViewController ()<UIGestureRecognizerDelegate>{
     __weak IBOutlet UIImageView     *_verifyCodeImgView;
@@ -84,7 +85,6 @@
         [btn addTarget:self action:@selector(tapImageAction:) forControlEvents:UIControlEventTouchUpInside];
         [_verifyCodeImgView addSubview:btn];
     }
-    
 }
 
 - (BOOL)_checkLoginParams{
@@ -179,6 +179,8 @@
         _manager.securityPolicy = securityPolicy;
         _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
         _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [_manager.requestSerializer setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:38.0) Gecko/20100101 Firefox/38.0" forHTTPHeaderField:@"User-Agent"];
+        [_manager.requestSerializer setValue:@"keep-alive" forHTTPHeaderField:@"Connection"];
     }
     return _manager;
 }
@@ -190,7 +192,13 @@
 - (IBAction)refreshVerifyCode:(id)sender{
     [self _clearBtnSelectStatus];
     
-    NSURL *imgUrl = [NSURL URLWithString:VERIFY_CODE_IMG_URL];
+    NSString *randomStr = [CommonUtils generateRandomWithLength:17
+                                                  containNumber:YES
+                                               containUpperChar:NO
+                                               containLowerChar:NO
+                                             containSepcialChar:NO];
+    NSString *imgUrlStr = [NSString stringWithFormat:@"%@%@%@",BASE_URL, USER_LOGIN_VERIFY_CODE_IMG_URL, randomStr];
+    NSURL *imgUrl = [NSURL URLWithString:imgUrlStr];
     SDWebImageOptions options = SDWebImageAllowInvalidSSLCertificates|SDWebImageRefreshCached|SDWebImageHandleCookies;
     [_verifyCodeImgView sd_setImageWithURL:imgUrl placeholderImage:nil options:options];
 }

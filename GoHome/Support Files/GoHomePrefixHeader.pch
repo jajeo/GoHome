@@ -37,9 +37,11 @@
 
 
 /**
- *  验证码图片获取 URL
+ *  验证码图片获取 URI
  */
-#define VERIFY_CODE_IMG_URL  @"https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&0.05125420784713175"
+#define USER_LOGIN_VERIFY_CODE_IMG_URL  @"otn/passcodeNew/getPassCodeNew?module=login&rand=sjrand&0."
+
+#define CONFIRM_ORDER_VERIFY_CODE_URI   @"otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp&0."
 
 /**
  *  BASE_URL
@@ -66,7 +68,9 @@
  */
 #define COOKIE_KEY  @"kyfw.12306.cn.cookie.key"
 
-
-
+/**
+ *  点击预订，初始化订单页面信息，获取REPEAT_SUBMIT_TOKEN
+ */
+#define INIT_DC_URI @"otn/confirmPassenger/initDc"
 
 #endif

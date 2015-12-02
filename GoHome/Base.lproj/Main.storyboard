@@ -84,7 +84,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ewL-Od-2BE">
-                                <rect key="frame" x="141" y="311" width="317" height="43"/>
+                                <rect key="frame" x="142" y="286" width="317" height="43"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.73966709779999995" green="0.72058552789999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -95,15 +95,20 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K4b-I2-Wcq">
-                                <rect key="frame" x="163" y="388" width="240" height="128"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K4b-I2-Wcq">
+                                <rect key="frame" x="154" y="338" width="293" height="190"/>
                                 <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="190" id="Xt7-OR-JE0"/>
+                                    <constraint firstAttribute="width" constant="293" id="eH0-4E-sT8"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="centerY" secondItem="1Xn-IK-Fk3" secondAttribute="centerY" constant="-0.5" id="03y-SY-UpV"/>
+                            <constraint firstItem="UQ0-n0-evT" firstAttribute="top" secondItem="K4b-I2-Wcq" secondAttribute="bottom" constant="8" id="04g-uT-yFJ"/>
                             <constraint firstItem="Zhl-Ym-MKP" firstAttribute="top" secondItem="8h2-4M-XsM" secondAttribute="bottom" constant="76" id="0Rg-2q-csj"/>
                             <constraint firstItem="Zhl-Ym-MKP" firstAttribute="height" secondItem="8h2-4M-XsM" secondAttribute="height" id="2kX-Sr-dZa"/>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="width" secondItem="Qy1-DY-sZ2" secondAttribute="width" id="3AV-T8-pN9"/>
@@ -111,6 +116,7 @@
                             <constraint firstAttribute="trailing" secondItem="vqy-dG-DeO" secondAttribute="trailing" constant="10" id="4bx-BI-F5d"/>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="top" secondItem="uxN-MX-jfJ" secondAttribute="bottom" constant="128" id="6jS-lT-xdj"/>
                             <constraint firstItem="Zhl-Ym-MKP" firstAttribute="leading" secondItem="8h2-4M-XsM" secondAttribute="leading" id="6o6-nR-3dR"/>
+                            <constraint firstAttribute="centerX" secondItem="K4b-I2-Wcq" secondAttribute="centerX" constant="-0.5" id="7FN-Ot-IHO"/>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="leading" secondItem="ZI3-rT-X4c" secondAttribute="leading" constant="10" id="BF9-7t-lpO"/>
                             <constraint firstAttribute="trailing" secondItem="1Xn-IK-Fk3" secondAttribute="trailing" constant="10" id="Cix-hf-dGH"/>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="height" secondItem="Qy1-DY-sZ2" secondAttribute="height" id="He6-6k-ICG"/>
@@ -120,7 +126,7 @@
                             <constraint firstAttribute="centerX" secondItem="ewL-Od-2BE" secondAttribute="centerX" id="a5z-LS-sZk"/>
                             <constraint firstItem="vqy-dG-DeO" firstAttribute="centerY" secondItem="Qy1-DY-sZ2" secondAttribute="centerY" constant="0.5" id="fab-7R-jSy"/>
                             <constraint firstItem="vqy-dG-DeO" firstAttribute="leading" secondItem="Qy1-DY-sZ2" secondAttribute="trailing" constant="12" id="g0h-Pc-BeW"/>
-                            <constraint firstItem="ewL-Od-2BE" firstAttribute="top" secondItem="BsL-nm-QfY" secondAttribute="bottom" constant="53" id="gA8-XS-e89"/>
+                            <constraint firstItem="ewL-Od-2BE" firstAttribute="top" secondItem="BsL-nm-QfY" secondAttribute="bottom" constant="28" id="gA8-XS-e89"/>
                             <constraint firstItem="8h2-4M-XsM" firstAttribute="leading" secondItem="Qy1-DY-sZ2" secondAttribute="leading" id="mZZ-J0-6bm"/>
                             <constraint firstItem="Zhl-Ym-MKP" firstAttribute="centerY" secondItem="BsL-nm-QfY" secondAttribute="centerY" constant="-7.5" id="oC5-Qo-CSM"/>
                             <constraint firstItem="Zhl-Ym-MKP" firstAttribute="top" secondItem="8h2-4M-XsM" secondAttribute="top" constant="97" id="xIy-G3-Nxa"/>
@@ -128,7 +134,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="_verifyCodeImg" destination="K4b-I2-Wcq" id="BR3-dV-FRb"/>
+                        <outlet property="_verifyCodeImgView" destination="K4b-I2-Wcq" id="vvf-uI-Ijl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oZg-TA-1fB" userLabel="First Responder" sceneMemberID="firstResponder"/>

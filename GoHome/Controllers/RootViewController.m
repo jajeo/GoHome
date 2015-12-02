@@ -29,6 +29,11 @@
     [self _checkCookieIsValid];
 }
 
+
+
+
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -89,6 +94,8 @@
         _manager.securityPolicy = securityPolicy;
         _manager.responseSerializer = [AFHTTPResponseSerializer serializer];
         _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+        [_manager.requestSerializer setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:38.0) Gecko/20100101 Firefox/38.0" forHTTPHeaderField:@"User-Agent"];
+        [_manager.requestSerializer setValue:@"keep-alive" forHTTPHeaderField:@"Connection"];
     }
     return _manager;
 }
